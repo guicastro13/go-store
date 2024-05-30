@@ -7,4 +7,5 @@ import (
 
 func InitUserRoutes(router chi.Router, h userhandler.UserHandler) {
   router.Post("/user", h.CreateUser)
+  router.Patch("/user/{id}", h.UpdateUser)
 }

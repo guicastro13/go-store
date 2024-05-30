@@ -18,5 +18,6 @@ type handler struct {
 
 type UserHandler interface {
   CreateUser(w http.ResponseWriter, r *http.Request)
+  UpdateUser(w http.ResponseWriter, r *http.Request)
 }
 
