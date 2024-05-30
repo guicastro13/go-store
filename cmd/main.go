@@ -3,7 +3,7 @@ package main
 import (
   "log/slog"
 
-  "github.com/guicastro13/go-store/config/logger"
+  "github.com/guicastro13/go-store/config"
 )
 
 type user struct {
