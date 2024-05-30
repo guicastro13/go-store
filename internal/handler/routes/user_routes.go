@@ -10,4 +10,5 @@ func InitUserRoutes(router chi.Router, h userhandler.UserHandler) {
   router.Patch("/user/{id}", h.UpdateUser)
   router.Get("/user/{id}", h.GetUserByID)
   router.Delete("/user/{id}", h.DeleteUser)
+  router.Get("/users", h.FindManyUsers)
 }

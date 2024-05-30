@@ -154,3 +154,17 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
   }
   w.WriteHeader(http.StatusNoContent)
 }
+
+func (h *handler) FindManyUsers(w http.ResponseWriter, r *http.Request) {
+  res, err := h.service.FindManyUsers(r.Context())
+  if err != nil {
+    slog.Error(fmt.Sprintf("error to find many users: %v", err), slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusInternalServerError)
+    msg := httperr.NewBadRequestError("error to find many users")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusOK)
+  json.NewEncoder(w).Encode(res)
+}

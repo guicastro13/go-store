@@ -9,3 +9,7 @@ type UserResponse struct {
   CreatedAt time.Time `json:"created_at"`
   UpdatedAt time.Time `json:"updated_at"`
 }
+
+type ManyUsersReponse struct {
+  Users []UserResponse `json:"users"`
+}
