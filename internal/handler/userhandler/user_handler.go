@@ -108,7 +108,7 @@ func (h *handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
   }
   _, err := uuid.Parse(id)
   if err != nil {
-    slog.Error(fmt.Sprintf("error to parse id: v%", err), slog.String("package", "userhandler"))
+    slog.Error(fmt.Sprintf("error to parse id: %v", err), slog.String("package", "userhandler"))
     w.WriteHeader(http.StatusBadRequest)
     msg := httperr.NewBadRequestError("error to parse id")
     json.NewEncoder(w).Encode(msg)
