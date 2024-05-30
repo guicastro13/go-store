@@ -52,6 +52,10 @@ func ValidateHttpData(d interface{}) *httperr.RestErr {
           cause.Message = fmt.Sprintf("%s is not a valid email", fieldName)
           cause.Field = fieldName
           cause.Value = e.Value()
+        case "containsany":
+          cause.Message = fmt.Sprintf("%s must contain at least one of the following characters: !@#$%%*", fieldName)
+          cause.Field = fieldName
+          cause.Value = e.Value()
         default:
           cause.Message = "invalid field"
           cause.Field = fieldName
