@@ -26,3 +26,7 @@ func (s *service) GetUserByID(ctx context.Context, id string) (*response.UserRes
   }
   return &userFake, nil
 }
+
+func (s *service) DeleteUser(ctx context.Context, id string) error {
+  return nil
+}
