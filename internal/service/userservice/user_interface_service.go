@@ -19,4 +19,5 @@ type service struct {
 
 type UserService interface {
   CreateUser(ctx context.Context, u dto.CreateUserDto) error
+  UpdateUser(ctx context.Context, u dto.UpdateUserDto, id string) error
 }

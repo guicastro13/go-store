@@ -87,4 +87,12 @@ func(h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(httpErr)
     return
   }
+  err = h.service.UpdateUser(r.Context(), req, id)
+  if err != nil {
+    slog.Error(fmt.Sprintf("error to update user: %v", err), slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusInternalServerError)
+    msg := httperr.NewBadRequestError("error to update user")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
 }
