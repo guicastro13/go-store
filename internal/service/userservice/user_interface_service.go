@@ -24,4 +24,5 @@ type UserService interface {
   GetUserByID(ctx context.Context, id string) (*response.UserResponse, error)
   DeleteUser(ctx context.Context, id string) error
   FindManyUsers(ctx context.Context) (response.ManyUsersReponse, error)
+  UpdateUserPassword(ctx context.Context, u *dto.UpdateUserPasswordDto, id string) error
 }

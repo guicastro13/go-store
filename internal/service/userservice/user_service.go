@@ -21,7 +21,7 @@ func (s *service) GetUserByID(ctx context.Context, id string) (*response.UserRes
   userFake := response.UserResponse{
     ID: "123",
     Name: "Guilherme",
-    Email: "guii_1@hotmail.com",
+Email: "guii_1@hotmail.com",
     CreatedAt: time.Now(),
     UpdatedAt: time.Now(),
   }
@@ -45,4 +45,10 @@ func (s *service) FindManyUsers(ctx context.Context) (response.ManyUsersReponse,
     usersFake.Users = append(usersFake.Users, userFake)
   }
   return usersFake, nil
+}
+
+func (s *service) UpdateUserPassword(ctx context.Context, u *dto.UpdateUserPasswordDto, id string) error {
+  fmt.Println("new password: ", u.Password)
+  fmt.Println("old password: ", u.OldPassword)
+  return nil
 }
