@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/guicastro13/go-store/internal/dto"
+	"github.com/guicastro13/go-store/internal/handler/response"
 	userrepository "github.com/guicastro13/go-store/internal/repository/userrepository"
 )
 
@@ -20,4 +21,5 @@ type service struct {
 type UserService interface {
   CreateUser(ctx context.Context, u dto.CreateUserDto) error
   UpdateUser(ctx context.Context, u dto.UpdateUserDto, id string) error
+  GetUserByID(ctx context.Context, id string) (*response.UserResponse, error)
 }

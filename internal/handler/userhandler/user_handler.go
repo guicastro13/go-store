@@ -96,3 +96,33 @@ func(h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
     return
   }
 }
+
+func (h *handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
+  id := chi.URLParam(r, "id")
+  if id == "" {
+    slog.Error("id is empty", slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusBadRequest)
+    msg := httperr.NewBadRequestError("id is required")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+  _, err := uuid.Parse(id)
+  if err != nil {
+    slog.Error(fmt.Sprintf("error to parse id: v%", err), slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusBadRequest)
+    msg := httperr.NewBadRequestError("error to parse id")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+  res, err := h.service.GetUserByID(r.Context(), id)
+  if err != nil {
+    slog.Error(fmt.Sprintf("error to get user: %v", err), slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusInternalServerError)
+    msg := httperr.NewBadRequestError("error to get user")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusOK)
+  json.NewEncoder(w).Encode(res)
+}
