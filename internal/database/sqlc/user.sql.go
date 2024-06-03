@@ -152,7 +152,7 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserBy
 }
 
 const findUserByID = `-- name: FindUserByID :one
-SELECT u.id, u.name, u.created_at, u.updated_at, a.cep, a.uf, a.city, a.complement, a.street
+SELECT u.id, u.name, u.email ,u.created_at, u.updated_at, a.cep, a.uf, a.city, a.complement, a.street
 FROM users u
 JOIN address a ON a.user_id = u.id
 WHERE u.id = $1
@@ -161,6 +161,7 @@ WHERE u.id = $1
 type FindUserByIDRow struct {
 	ID         string
 	Name       string
+	Email      string
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	Cep        string
@@ -176,6 +177,7 @@ func (q *Queries) FindUserByID(ctx context.Context, id string) (FindUserByIDRow,
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.Email,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Cep,

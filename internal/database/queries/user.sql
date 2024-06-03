@@ -9,7 +9,7 @@ VALUES ($1, $2, $3, $4, $5, $6);
 SELECT u.id, u.name, u.email FROM users u WHERE u.email = $1;
 
 -- name: FindUserByID :one
-SELECT u.id, u.name, u.created_at, u.updated_at, a.cep, a.uf, a.city, a.complement, a.street
+SELECT u.id, u.name, u.email ,u.created_at, u.updated_at, a.cep, a.uf, a.city, a.complement, a.street
 FROM users u
 JOIN address a ON a.user_id = u.id
 WHERE u.id = $1;
