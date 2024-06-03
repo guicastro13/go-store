@@ -25,4 +25,5 @@ type UserService interface {
 	DeleteUser(ctx context.Context, id string) error
 	FindManyUsers(ctx context.Context) (*response.ManyUsersReponse, error)
 	UpdateUserPassword(ctx context.Context, u *dto.UpdateUserPasswordDto, id string) error
+  Login(ctx context.Context, u dto.LoginDto) (*response.UserAuthToken, error)
 }
