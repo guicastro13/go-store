@@ -3,38 +3,48 @@ package userrepository
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guicastro13/go-store/internal/database/sqlc"
 	"github.com/guicastro13/go-store/internal/entity"
+	"github.com/guicastro13/go-store/internal/repository/transaction"
 )
 
 func (r *repository) CreateUser(ctx context.Context, u *entity.UserEntity) error {
-  err := r.queries.CreateUser(ctx, sqlc.CreateUserParams{
-    ID: u.ID,
-    Name: u.Name,
-    Email: u.Password,
-    Password: u.Password,
-    CreatedAt: u.CreatedAt,
-    UpdatedAt: u.UpdatedAt,
+  err := transaction.Run(ctx, r.db, func(q *sqlc.Queries) error {
+    var err error
+    err = q.CreateUser(ctx, sqlc.CreateUserParams{
+        ID:        u.ID,
+        Name:      u.Name,
+        Email:     u.Email,
+        Password:  u.Password,
+        CreatedAt: u.CreatedAt,
+        UpdatedAt: u.UpdatedAt,
+      })
+    if err != nil {
+      return err
+    }
+    err = q.CreateUserAddress(ctx, sqlc.CreateUserAddressParams{
+        ID:         uuid.New().String(),
+        UserID:     u.ID,
+        Cep:        u.Address.CEP,
+        Ibge:       u.Address.IBGE,
+        Uf:         u.Address.UF,
+        City:       u.Address.City,
+        Complement: sql.NullString{String: u.Address.Complement, Valid: u.Address.Complement != ""},
+        Street:     u.Address.Street,
+        CreatedAt:  time.Now(),
+        UpdatedAt:  time.Now(),
+    })
+    if err != nil {
+      return nil
+    }
+    return nil
   })
   if err != nil {
-    return err
-  }
-  err = r.queries.CreateUserAddress(ctx, sqlc.CreateUserAddressParams{
-    ID: uuid.New().String(),
-    UserID: u.ID,
-    Cep: u.Address.CEP,
-    Ibge: u.Address.IBGE,
-    Uf: u.Address.UF,
-    City: u.Address.City,
-    Complement: sql.NullString{String: u.Address.Complement, Valid: u.Address.Complement != ""},
-    Street: u.Address.Street,
-    CreatedAt: time.Now(),
-    UpdatedAt: time.Now(),
-  })
-  if err != nil {
+    slog.Error("error to create user and address, roll back applied", "err", err)
     return err
   }
   return nil
