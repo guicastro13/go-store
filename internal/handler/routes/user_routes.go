@@ -16,11 +16,11 @@ func InitUserRoutes(router chi.Router, h userhandler.UserHandler) {
     r.Use(jwtauth.Verifier(env.Env.TokenAuth))
     r.Use(jwtauth.Authenticator)
     
-    r.Get("/", h.FindManyUsers)
-    r.Patch("/{id}", h.UpdateUser)
-	  r.Patch("/password/{id}", h.UpdateUserPassword)
-	  r.Delete("/{id}", h.DeleteUser)
-	  r.Get("/{id}", h.GetUserByID)
+    r.Get("/list-all", h.FindManyUsers)
+    r.Patch("/", h.UpdateUser)
+	  r.Patch("/password", h.UpdateUserPassword)
+	  r.Delete("/", h.DeleteUser)
+	  r.Get("/", h.GetUserByID)
   })
 
   router.Post("/auth/login", h.Login)

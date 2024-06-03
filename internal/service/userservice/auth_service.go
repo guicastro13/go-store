@@ -27,7 +27,7 @@ func (s *service) Login(ctx context.Context, u dto.LoginDto) (*response.UserAuth
     slog.Error("error to search user password", "err", err, slog.String("package", "userservice"))
     return nil, errors.New("error to search user password")
   }
-  err = bcrypt.CompareHashAndPassword([]byte(userPass.Password), []byte(user.Password))
+  err = bcrypt.CompareHashAndPassword([]byte(userPass.Password), []byte(u.Password))
   if err != nil {
     slog.Error("invalid password", slog.String("package", "userservice"))
     return nil, errors.New("invalid password")

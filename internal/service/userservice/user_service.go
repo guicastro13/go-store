@@ -24,7 +24,7 @@ func (s *service) CreateUser(ctx context.Context, u dto.CreateUserDto) error {
     slog.Error("user already exists", slog.String("package", "userservice"))
     return errors.New("user already exists")
   }
-  passwordEcrypted, err := bcrypt.GenerateFromPassword([]byte(u.Password), 11)
+  passwordEcrypted, err := bcrypt.GenerateFromPassword([]byte(u.Password), 12)
   if err != nil {
     slog.Error("error to encrypt password", "err", err, slog.String("package", "userservice"))
     return errors.New("error to escrypt password")
