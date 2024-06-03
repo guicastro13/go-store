@@ -6,8 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/google/uuid"
+	"github.com/guicastro13/go-store/internal/common/utils"
 	"github.com/guicastro13/go-store/internal/dto"
 	"github.com/guicastro13/go-store/internal/handler/httperr"
 	"github.com/guicastro13/go-store/internal/handler/validation"
@@ -80,23 +79,15 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 //	@Router			/user [patch]
 func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var req dto.UpdateUserDto
-	id := chi.URLParam(r, "id")
-	if id == "" {
-		slog.Error("id is empty", slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("id is required")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	_, err := uuid.Parse(id)
-	if err != nil {
-		slog.Error(fmt.Sprintf("error to parse id: %v", err), slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("error to parse id")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	if r.Body == http.NoBody {
+	user, err := utils.DecodeJwt(r)
+    if err != nil {
+      slog.Error("error to decode jwt", slog.String("package", "userhandler"))
+      w.WriteHeader(http.StatusBadRequest)
+      msg := httperr.NewBadRequestError("error to decode jwt")
+      json.NewEncoder(w).Encode(msg)
+      return
+  }
+  if r.Body == http.NoBody {
 		slog.Error("body is empty", slog.String("package", "userhandler"))
 		w.WriteHeader(http.StatusBadRequest)
 		msg := httperr.NewBadRequestError("body is required")
@@ -118,7 +109,7 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(httpErr)
 		return
 	}
-	err = h.service.UpdateUser(r.Context(), req, id)
+	err = h.service.UpdateUser(r.Context(), req, user.ID)
 	if err != nil {
 		slog.Error(fmt.Sprintf("error to update user: %v", err), slog.String("package", "userhandler"))
     if err.Error() == "user not found" {
@@ -147,32 +138,29 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 //	@Security		ApiKeyAuth
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path	string	true	"user id"
 //	@Success		200 {object} response.UserResponse
 //	@Failure		400	{object}	httperr.RestErr
 //	@Failure		404	{object}	httperr.RestErr
 //	@Failure		500	{object}	httperr.RestErr
-//	@Router			/user/{id} [get]
+//	@Router			/user [get]
 func (h *handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
-	if id == "" {
-		slog.Error("id is empty", slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("id is required")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	_, err := uuid.Parse(id)
-	if err != nil {
-		slog.Error(fmt.Sprintf("error to parse id: %v", err), slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("error to parse id")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	res, err := h.service.GetUserByID(r.Context(), id)
+  user, err := utils.DecodeJwt(r)
+  if err != nil {
+    slog.Error("error to decode jwt", slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusBadRequest)
+    msg := httperr.NewBadRequestError("error to decode jwt")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+	res, err := h.service.GetUserByID(r.Context(), user.ID)
 	if err != nil {
 		slog.Error(fmt.Sprintf("error to get user: %v", err), slog.String("package", "userhandler"))
+    if err.Error() == "user not found" {
+      w.WriteHeader(http.StatusNotFound)
+      msg := httperr.NewBadRequestError("user not found")
+      json.NewEncoder(w).Encode(msg)
+      return
+    }
 		w.WriteHeader(http.StatusInternalServerError)
 		msg := httperr.NewBadRequestError("error to get user")
 		json.NewEncoder(w).Encode(msg)
@@ -190,30 +178,21 @@ func (h *handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 //	@Security		ApiKeyAuth
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path	string	true	"user id"
 //	@Success		200
 //	@Failure		400	{object}	httperr.RestErr
 //	@Failure		404	{object}	httperr.RestErr
 //	@Failure		500	{object}	httperr.RestErr
-//	@Router			/user/{id} [delete]
+//	@Router			/user [delete]
 func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
-	if id == "" {
-		slog.Error("id is empty", slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("id is required")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	_, err := uuid.Parse(id)
-	if err != nil {
-		slog.Error(fmt.Sprintf("error to parse id: %v", err), slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("error to parse id")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	err = h.service.DeleteUser(r.Context(), id)
+  user, err := utils.DecodeJwt(r)
+  if err != nil {
+    slog.Error("error to decode jwt", slog.String("package", "userhandler"))
+    w.WriteHeader(http.StatusBadRequest)
+    msg := httperr.NewBadRequestError("error to decode jwt")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+  err = h.service.DeleteUser(r.Context(), user.ID)
 	if err != nil {
 		slog.Error(fmt.Sprintf("error to delete user: %v", err), slog.String("package", "userhandler"))
 		w.WriteHeader(http.StatusInternalServerError)
@@ -257,31 +236,22 @@ func (h *handler) FindManyUsers(w http.ResponseWriter, r *http.Request) {
 //	@Security		ApiKeyAuth
 //	@Accept			json
 //	@Produce		json
-//	@Param			id		path	string						true	"user id"
 //	@Param			body	body	dto.UpdateUserPasswordDto	true	"Update user password dto"	true
 //	@Success		200
 //	@Failure		400	{object}	httperr.RestErr
 //	@Failure		500	{object}	httperr.RestErr
-//	@Router			/user/password/{id} [get]
+//	@Router			/user/password [get]
 func (h *handler) UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 	var req dto.UpdateUserPasswordDto
-
-	id := chi.URLParam(r, "id")
-	if id == "" {
-		slog.Error("id is empty", slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("id is required")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
-	_, err := uuid.Parse(id)
-	if err != nil {
-		slog.Error(fmt.Sprintf("error to parse id: %v", err), slog.String("package", "userhandler"))
-		w.WriteHeader(http.StatusBadRequest)
-		msg := httperr.NewBadRequestError("error to parse id")
-		json.NewEncoder(w).Encode(msg)
-		return
-	}
+  
+  user, err := utils.DecodeJwt(r)
+    if err != nil {
+      slog.Error("error to decode jwt", slog.String("package", "userhandler"))
+      w.WriteHeader(http.StatusBadRequest)
+      msg := httperr.NewBadRequestError("error to decode jwt")
+      json.NewEncoder(w).Encode(msg)
+      return
+    }
 	if r.Body == http.NoBody {
 		slog.Error("body is empty", slog.String("package", "userhandler"))
 		w.WriteHeader(http.StatusBadRequest)
@@ -304,7 +274,7 @@ func (h *handler) UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(httpErr)
 		return
 	}
-	err = h.service.UpdateUserPassword(r.Context(), &req, id)
+	err = h.service.UpdateUserPassword(r.Context(), &req, user.ID)
 	if err != nil {
 		slog.Error(fmt.Sprintf("error to update user password: %v", err), slog.String("package", "userhandler"))
 		w.WriteHeader(http.StatusInternalServerError)
@@ -355,5 +325,5 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
   }
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(token)
+  json.NewEncoder(w).Encode(token)
 }

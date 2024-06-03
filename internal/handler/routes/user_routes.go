@@ -1,15 +1,27 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/jwtauth"
+	"github.com/guicastro13/go-store/config/env"
 	"github.com/guicastro13/go-store/internal/handler/userhandler"
+  "github.com/guicastro13/go-store/internal/handler/middleware"
 )
 
 func InitUserRoutes(router chi.Router, h userhandler.UserHandler) {
+  router.Use(middleware.LoggerData)
+
 	router.Post("/user", h.CreateUser)
-	router.Patch("/user/{id}", h.UpdateUser)
-	router.Get("/user/{id}", h.GetUserByID)
-	router.Delete("/user/{id}", h.DeleteUser)
-	router.Get("/users", h.FindManyUsers)
-	router.Patch("/password/{id}", h.UpdateUserPassword)
+	router.Route("/user", func(r chi.Router) {
+    r.Use(jwtauth.Verifier(env.Env.TokenAuth))
+    r.Use(jwtauth.Authenticator)
+    
+    r.Get("/", h.FindManyUsers)
+    r.Patch("/{id}", h.UpdateUser)
+	  r.Patch("/password/{id}", h.UpdateUserPassword)
+	  r.Delete("/{id}", h.DeleteUser)
+	  r.Get("/{id}", h.GetUserByID)
+  })
+
+  router.Post("/auth/login", h.Login)
 }

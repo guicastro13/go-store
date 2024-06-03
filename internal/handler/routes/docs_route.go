@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 

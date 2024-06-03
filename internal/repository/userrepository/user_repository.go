@@ -12,9 +12,9 @@ func (r *repository) CreateUser(ctx context.Context, u *entity.UserEntity) error
 
 func (r *repository) FindUserByEmail(ctx context.Context, email string) (*entity.UserEntity, error) {
   userMock := entity.UserEntity{
-    ID: "1",
-    Name: "Guilherme",
-    Email: "guii_1@hotmail.com",
+    ID:    "1",
+    Name:  "John",
+    Email: "john.doe@email.com",
   }
   return &userMock, nil
 }

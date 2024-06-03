@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/guicastro13/go-store/config"
 	"github.com/guicastro13/go-store/config/env"
 	"github.com/guicastro13/go-store/internal/database"
@@ -31,7 +31,6 @@ func main() {
 		return
 	}
 
-	router := chi.NewRouter()
 	queries := sqlc.New(dbConnection)
 
 	//user
@@ -40,6 +39,7 @@ func main() {
 	newUserHandler := userhandler.NewUserHandler(newUserService)
 
 	//init routes
+  router := chi.NewRouter()
 	routes.InitUserRoutes(router, newUserHandler)
 	routes.InitDocsRoutes(router)
 

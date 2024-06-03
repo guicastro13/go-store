@@ -91,7 +91,7 @@ func (s *service) UpdateUser(ctx context.Context, u dto.UpdateUserDto, id string
 }
 
 func (s *service) GetUserByID(ctx context.Context, id string) (*response.UserResponse, error) {
-  userExists, err := s.repo.FindUserById(ctx, id)
+  userExists, err := s.repo.FindUserByID(ctx, id)
   if err != nil {
     slog.Error("error to search user by id", "err", err, slog.String("package", "userservice"))
     return nil, err
@@ -111,7 +111,7 @@ func (s *service) GetUserByID(ctx context.Context, id string) (*response.UserRes
 }
 
 func (s *service) DeleteUser(ctx context.Context, id string) error {
-  userExists, err := s.repo.FindUserById(ctx, id)
+  userExists, err := s.repo.FindUserByID(ctx, id)
   if err != nil {
     slog.Error("error to seach user by id", "err", err, slog.String("package", "userservice"))
     return err
@@ -149,7 +149,7 @@ func (s *service) FindManyUsers(ctx context.Context) (*response.ManyUsersReponse
 }
 
 func (s *service) UpdateUserPassword(ctx context.Context, u *dto.UpdateUserPasswordDto, id string) error {
-  userExists, err := s.repo.FindUserById(ctx, id)
+  userExists, err := s.repo.FindUserByID(ctx, id)
   if err != nil {
     slog.Error("error to search user by id", "err", err, slog.String("package", "userservice"))
     return err
@@ -180,3 +180,4 @@ func (s *service) UpdateUserPassword(ctx context.Context, u *dto.UpdateUserPassw
   }
   return nil
 }
+
