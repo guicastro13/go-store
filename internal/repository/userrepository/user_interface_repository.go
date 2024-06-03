@@ -23,10 +23,10 @@ type repository struct {
 type UserRepository interface {
 	CreateUser(ctx context.Context, u *entity.UserEntity) error
 	FindUserByEmail(ctx context.Context, email string) (*entity.UserEntity, error)
-	FindUserById(ctx context.Context, id string) (*entity.UserEntity, error)
+	FindUserByID(ctx context.Context, id string) (*entity.UserEntity, error)
 	UpdateUser(ctx context.Context, u *entity.UserEntity) error
 	DeleteUser(ctx context.Context, id string) error
 	FindManyUsers(ctx context.Context) ([]entity.UserEntity, error)
 	UpdatePassword(ctx context.Context, pass, id string) error
-  GetUserPassowrd(ctx context.Context, id string) (*entity.UserEntity, error)
+  GetUserPassword(ctx context.Context, id string) (*entity.UserEntity, error)
 }

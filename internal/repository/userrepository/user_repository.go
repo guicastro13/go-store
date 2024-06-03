@@ -6,7 +6,7 @@ import (
 	"github.com/guicastro13/go-store/internal/entity"
 )
 
-func (r *repository) CreateUser() error {
+func (r *repository) CreateUser(ctx context.Context, u *entity.UserEntity) error {
 	return nil
 }
 
