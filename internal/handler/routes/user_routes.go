@@ -11,17 +11,18 @@ import (
 func InitUserRoutes(router chi.Router, h userhandler.UserHandler) {
   router.Use(middleware.LoggerData)
 
-	router.Post("/user", h.CreateUser)
+
 	router.Route("/user", func(r chi.Router) {
     r.Use(jwtauth.Verifier(env.Env.TokenAuth))
     r.Use(jwtauth.Authenticator)
     
-    r.Get("/list-all", h.FindManyUsers)
-    r.Patch("/", h.UpdateUser)
+    r.Get("/all", h.FindManyUsers)
+    r.Patch("/me", h.UpdateUser)
 	  r.Patch("/password", h.UpdateUserPassword)
-	  r.Delete("/", h.DeleteUser)
-	  r.Get("/", h.GetUserByID)
+	  r.Delete("/me", h.DeleteUser)
+	  r.Get("/me", h.GetUserByID)
   })
 
+  router.Post("/user", h.CreateUser)
   router.Post("/auth/login", h.Login)
 }

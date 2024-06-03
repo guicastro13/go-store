@@ -11,13 +11,13 @@ import (
 	"github.com/guicastro13/go-store/internal/database"
 	"github.com/guicastro13/go-store/internal/database/sqlc"
 	"github.com/guicastro13/go-store/internal/handler/routes"
-	"github.com/guicastro13/go-store/internal/handler/userhandler"
+	handler "github.com/guicastro13/go-store/internal/handler/userhandler"
 	"github.com/guicastro13/go-store/internal/repository/userrepository"
 	"github.com/guicastro13/go-store/internal/service/userservice"
 )
 
 func main() {
-	logger.InitLogger()
+  logger.InitLogger()
 	slog.Info("starting api")
 
 	_, err := env.LoadingConfig(".")
@@ -36,7 +36,7 @@ func main() {
 	//user
 	userRepo := userrepository.NewUserRepository(dbConnection, queries)
 	newUserService := userservice.NewUserService(userRepo)
-	newUserHandler := userhandler.NewUserHandler(newUserService)
+	newUserHandler := handler.NewHandler(newUserService)
 
 	//init routes
   router := chi.NewRouter()

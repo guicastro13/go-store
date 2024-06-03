@@ -1,4 +1,4 @@
-package userhandler
+package handler
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	userservice "github.com/guicastro13/go-store/internal/service/userservice"
 )
 
-func NewUserHandler(service userservice.UserService) UserHandler {
+func NewHandler(service userservice.UserService) Handler {
 	return &handler{
 		service,
 	}
@@ -16,7 +16,7 @@ type handler struct {
 	service userservice.UserService
 }
 
-type UserHandler interface {
+type Handler interface {
 	CreateUser(w http.ResponseWriter, r *http.Request)
 	UpdateUser(w http.ResponseWriter, r *http.Request)
 	GetUserByID(w http.ResponseWriter, r *http.Request)

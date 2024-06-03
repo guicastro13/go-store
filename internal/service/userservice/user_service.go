@@ -22,8 +22,6 @@ func (s *service) CreateUser(ctx context.Context, u dto.CreateUserDto) error {
       slog.Error("error to search user by email", "err", err, slog.String("package","userservice"))
       return err
     }
-    slog.Error("error to search user by email", "err", err, slog.String("package", "userservice"))
-    return err
   }
   if userExists != nil {
     slog.Error("user already exists", slog.String("package", "userservice"))
