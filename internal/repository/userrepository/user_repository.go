@@ -86,26 +86,34 @@ func (r *repository) FindUserByID(ctx context.Context, id string) (*entity.UserE
 }
 
 func (r *repository) UpdateUser(ctx context.Context, u *entity.UserEntity) error {
-  err := r.queries.UpdateUser(ctx, sqlc.UpdateUserParams{
-    ID: u.ID,
-    Name: sql.NullString{String: u.Name, Valid: u.Name != ""},
-    Email: sql.NullString{String: u.Email, Valid: u.Email != ""},
-    UpdatedAt: u.UpdatedAt,
+  err := transaction.Run(ctx, r.db, func(q *sqlc.Queries)error {
+    var err error
+    err = r.queries.UpdateUser(ctx, sqlc.UpdateUserParams{
+      ID:        u.ID,
+      Name:      sql.NullString{String: u.Name, Valid: u.Name != ""},
+      Email:     sql.NullString{String: u.Email, Valid: u.Email != ""},
+      UpdatedAt: u.UpdatedAt,
+    })
+    if err != nil {
+      return err
+    }
+    err = r.queries.UpdateUserAddress(ctx, sqlc.UpdateUserAddressParams{
+      UserID:     u.ID,
+      Cep:        sql.NullString{String: u.Address.CEP, Valid: u.Address.CEP != ""},
+      Ibge:       sql.NullString{String: u.Address.IBGE, Valid: u.Address.IBGE != ""},
+      Uf:         sql.NullString{String: u.Address.UF, Valid: u.Address.UF != ""},
+      City:       sql.NullString{String: u.Address.City, Valid: u.Address.City != ""},
+      Complement: sql.NullString{String: u.Address.Complement, Valid: u.Address.Complement != ""},
+      Street:     sql.NullString{String: u.Address.Street, Valid: u.Address.Street != ""},
+      UpdatedAt:  time.Now(),
+    })
+    if err != nil {
+      return nil
+    }
+    return nil
   })
   if err != nil {
-    return err
-  }
-  err = r.queries.UpdateUserAddress(ctx, sqlc.UpdateUserAddressParams{
-    UserID: u.ID,
-    Cep: sql.NullString{String: u.Address.CEP, Valid: u.Address.CEP != ""},
-    Ibge: sql.NullString{String: u.Address.IBGE, Valid: u.Address.IBGE != ""},
-    Uf: sql.NullString{String: u.Address.UF, Valid: u.Address.UF != ""},
-    City: sql.NullString{String: u.Address.City, Valid: u.Address.City != ""},
-    Complement: sql.NullString{String: u.Address.Street, Valid: u.Address.Complement != ""},
-    Street: sql.NullString{String: u.Address.Street, Valid: u.Address.Street != ""},
-    UpdatedAt: time.Now(),
-  })
-  if err != nil {
+    slog.Error("error to update user and address, rollback applied", "err", err)
     return err
   }
   return nil
