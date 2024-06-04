@@ -15,6 +15,8 @@ import (
 	"github.com/guicastro13/go-store/internal/repository/categoryrepository"
 	"github.com/guicastro13/go-store/internal/repository/productrepository"
 	"github.com/guicastro13/go-store/internal/repository/userrepository"
+	"github.com/guicastro13/go-store/internal/service/categoryservice"
+	"github.com/guicastro13/go-store/internal/service/productservice"
 	"github.com/guicastro13/go-store/internal/service/userservice"
 )
 
@@ -41,11 +43,11 @@ func main() {
 
   //category
   categoryRepo := categoryrepository.NewCategoryRepository(dbConnection, queries)
-  newCategoryService := NewCategoryService(categoryRepo)
+  newCategoryService := categoryservice.NewCategoryService(categoryRepo)
 
   //product
   productRepo := productrepository.NewProductRepository(dbConnection, queries)
-  newProductService := NewProductService(productRepo)
+  newProductService := productservice.NewProductService(productRepo)
 
   newHandler := handler.NewHandler(newUserService, newCategoryService, newProductService)
 

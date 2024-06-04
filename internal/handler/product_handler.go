@@ -14,7 +14,7 @@ import (
 )
 
 func (h *handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
-  var req dto.CreateCategoryDto
+  var req dto.CreateProductDto
 
   if r.Body == http.NoBody {
     slog.Error("body if empty", slog.String("package", "producthandler"))

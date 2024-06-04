@@ -3,7 +3,9 @@ package handler
 import (
 	"net/http"
 
-	userservice "github.com/guicastro13/go-store/internal/service/userservice"
+	"github.com/guicastro13/go-store/internal/service/categoryservice"
+	"github.com/guicastro13/go-store/internal/service/productservice"
+	"github.com/guicastro13/go-store/internal/service/userservice"
 )
 
 func NewHandler(
@@ -14,7 +16,7 @@ func NewHandler(
 	return &handler{
     userService: userService,
     categoryService: categoryService,
-    productService: productService,
+    productservice: productService,
 	}
 }
 

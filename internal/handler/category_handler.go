@@ -36,7 +36,7 @@ func (h *handler) CreateCategory(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(httpErr)
     return
   }
-  err = &h.categoryService.CreateCategory(r.Context(), req)
+  err = h.categoryService.CreateCategory(r.Context(), req)
   if err != nil {
     slog.Error(fmt.Sprintf("error to create category: %v", err), slog.String("package", "categoryhandler"))
     w.WriteHeader(http.StatusBadRequest)
