@@ -43,3 +43,17 @@ func (h *handler) CreateCategory(w http.ResponseWriter, r *http.Request) {
   }
   w.WriteHeader(http.StatusCreated)
 }
+
+func (h *handler) FindManyCategories(w http.ResponseWriter, r *http.Request) {
+  res, err := h.categoryService.FindManyCategories(r.Context())
+  if err != nil {
+    slog.Error(fmt.Sprintf("error to find many categories: %v", err), slog.String("package", "categoryhandler"))
+    w.WriteHeader(http.StatusInternalServerError)
+    msg := httperr.NewInternalServerError("error to find many categories")
+    json.NewEncoder(w).Encode(msg)
+    return
+  }
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusOK)
+  json.NewEncoder(w).Encode(res)
+}

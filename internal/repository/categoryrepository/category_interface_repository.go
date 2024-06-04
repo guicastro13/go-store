@@ -22,4 +22,5 @@ type repository struct {
 
 type CategoryRepository interface {
   CreateCategory(ctx context.Context, c *entity.CategoryEntity) error
+  FindManyCategories(ctx context.Context) ([]entity.CategoryEntity, error)
 }

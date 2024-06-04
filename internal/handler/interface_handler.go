@@ -36,6 +36,7 @@ type Handler interface {
   Login(w http.ResponseWriter, r *http.Request)
 
   CreateCategory(w http.ResponseWriter, r *http.Request)
+  FindManyCategories(w http.ResponseWriter, r *http.Request)
 
   CreateProduct(w http.ResponseWriter, r *http.Request)
   UpdateProduct(w http.ResponseWriter, r *http.Request)

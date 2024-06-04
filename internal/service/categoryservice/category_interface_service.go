@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/guicastro13/go-store/internal/dto"
+	"github.com/guicastro13/go-store/internal/handler/response"
 	"github.com/guicastro13/go-store/internal/repository/categoryrepository"
 )
 
@@ -20,4 +21,5 @@ type service struct {
 
 type CategoryService interface {
   CreateCategory(ctx context.Context, u dto.CreateCategoryDto) error
+  FindManyCategories(ctx context.Context) (*response.ManyCategoryResponse, error)
 }

@@ -2,8 +2,8 @@ package dto
 
 type CreateProductDto struct {
   Title string `json:"title" validate:"required,min=3,max=40"`
-  Price int32 `json:"price" validate:"required.min=1"`
-  Categories []string `json:"categories" validate:"required.min=1,dive,uuid4"`
+  Price int32 `json:"price" validate:"required,min=1"`
+  Categories []string `json:"categories" validate:"required,min=1,dive,uuid4"`
   Description string `json:"description" validate:"required,min=3,max=500"`
 }
 

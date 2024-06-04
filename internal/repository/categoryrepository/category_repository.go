@@ -19,3 +19,19 @@ func (r *repository) CreateCategory(ctx context.Context, c *entity.CategoryEntit
   }
   return nil
 }
+
+func (r *repository) FindManyCategories(ctx context.Context) ([]entity.CategoryEntity, error) {
+  categories, err := r.queries.FindManyCategories(ctx)
+  if err != nil {
+    return nil, err
+  }
+  var categoriesEntity []entity.CategoryEntity
+  for _, category := range categories {
+    categoryEntity := entity.CategoryEntity{
+      ID: category.ID,
+      Title: category.Title,
+    }
+    categoriesEntity = append(categoriesEntity, categoryEntity)
+  }
+  return categoriesEntity, nil
+}

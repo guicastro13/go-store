@@ -51,5 +51,5 @@ ORDER BY p.created_at DESC;
 -- name: GetProductCategories :many
 SELECT c.id, c.title FROM category c
 JOIN product_category pc ON pc.category_id = c.id
-WHERE pc.product_id $1;
+WHERE pc.product_id = $1;
 

@@ -199,7 +199,7 @@ func (q *Queries) GetProductByID(ctx context.Context, id string) (bool, error) {
 const getProductCategories = `-- name: GetProductCategories :many
 SELECT c.id, c.title FROM category c
 JOIN product_category pc ON pc.category_id = c.id
-WHERE pc.product_id $1
+WHERE pc.product_id = $1
 `
 
 type GetProductCategoriesRow struct {
@@ -207,8 +207,8 @@ type GetProductCategoriesRow struct {
 	Title string
 }
 
-func (q *Queries) GetProductCategories(ctx context.Context, dollar_1 interface{}) ([]GetProductCategoriesRow, error) {
-	rows, err := q.db.QueryContext(ctx, getProductCategories, dollar_1)
+func (q *Queries) GetProductCategories(ctx context.Context, productID string) ([]GetProductCategoriesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getProductCategories, productID)
 	if err != nil {
 		return nil, err
 	}
