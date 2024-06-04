@@ -12,6 +12,8 @@ import (
 	"github.com/guicastro13/go-store/internal/database/sqlc"
 	"github.com/guicastro13/go-store/internal/handler"
 	"github.com/guicastro13/go-store/internal/handler/routes"
+	"github.com/guicastro13/go-store/internal/repository/categoryrepository"
+	"github.com/guicastro13/go-store/internal/repository/productrepository"
 	"github.com/guicastro13/go-store/internal/repository/userrepository"
 	"github.com/guicastro13/go-store/internal/service/userservice"
 )
@@ -36,7 +38,16 @@ func main() {
 	//user
 	userRepo := userrepository.NewUserRepository(dbConnection, queries)
 	newUserService := userservice.NewUserService(userRepo)
-  newHandler := handler.NewHandler(newUserService)
+
+  //category
+  categoryRepo := categoryrepository.NewCategoryRepository(dbConnection, queries)
+  newCategoryService := NewCategoryService(categoryRepo)
+
+  //product
+  productRepo := productrepository.NewProductRepository(dbConnection, queries)
+  newProductService := NewProductService(productRepo)
+
+  newHandler := handler.NewHandler(newUserService, newCategoryService, newProductService)
 
 	//init routes
   router := chi.NewRouter()
