@@ -22,6 +22,7 @@ Rotas:
 
 
 **Produtos**
+
 **Criar Produto (POST /product)**
 
 Cria um novo produto. Sem necessidade de autorização.
@@ -71,14 +72,6 @@ Variável do Caminho:
 
 id: ID do produto a ser excluído
 
-
-**Obter Produto por ID (GET /product/:id)**
-
-Obtém detalhes de um produto específico. Requer autorização.
-
-Variável do Caminho:
-
-id: ID do produto a ser recuperado
 **Obter Todos os Produtos (GET /products)**
 
 Recupera uma lista de todos os produtos. Requer autorização.
@@ -87,6 +80,7 @@ Recupera uma lista de todos os produtos. Requer autorização.
 
 
 ***Categorias***
+
 **Criar Categoria (POST /category)**
 
 Cria uma nova categoria. Requer autorização.
