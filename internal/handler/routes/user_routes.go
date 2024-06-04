@@ -4,11 +4,11 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
 	"github.com/guicastro13/go-store/config/env"
-	"github.com/guicastro13/go-store/internal/handler/userhandler"
-  "github.com/guicastro13/go-store/internal/handler/middleware"
+	"github.com/guicastro13/go-store/internal/handler"
+	"github.com/guicastro13/go-store/internal/handler/middleware"
 )
 
-func InitUserRoutes(router chi.Router, h userhandler.UserHandler) {
+func InitRoutes(router chi.Router, h handler.Handler) {
   router.Use(middleware.LoggerData)
 
 

@@ -10,8 +10,8 @@ import (
 	"github.com/guicastro13/go-store/config/env"
 	"github.com/guicastro13/go-store/internal/database"
 	"github.com/guicastro13/go-store/internal/database/sqlc"
+	"github.com/guicastro13/go-store/internal/handler"
 	"github.com/guicastro13/go-store/internal/handler/routes"
-	handler "github.com/guicastro13/go-store/internal/handler/userhandler"
 	"github.com/guicastro13/go-store/internal/repository/userrepository"
 	"github.com/guicastro13/go-store/internal/service/userservice"
 )
@@ -36,11 +36,11 @@ func main() {
 	//user
 	userRepo := userrepository.NewUserRepository(dbConnection, queries)
 	newUserService := userservice.NewUserService(userRepo)
-	newUserHandler := handler.NewHandler(newUserService)
+  newHandler := handler.NewHandler(newUserService)
 
 	//init routes
   router := chi.NewRouter()
-	routes.InitUserRoutes(router, newUserHandler)
+	routes.InitRoutes(router, newHandler)
 	routes.InitDocsRoutes(router)
 
 	port := fmt.Sprintf(":%s", env.Env.GoPort)

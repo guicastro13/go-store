@@ -6,14 +6,22 @@ import (
 	userservice "github.com/guicastro13/go-store/internal/service/userservice"
 )
 
-func NewHandler(service userservice.UserService) Handler {
+func NewHandler(
+  userService userservice.UserService,
+  categoryService categoryservice.CategoryService,
+  productService productservice.ProductService,
+) Handler {
 	return &handler{
-		service,
+    userService: userService,
+    categoryService: categoryService,
+    productService: productService,
 	}
 }
 
 type handler struct {
-	service userservice.UserService
+	userService userservice.UserService
+  categoryService categoryservice.CategoryService
+  productservice productservice.ProductService
 }
 
 type Handler interface {
@@ -24,4 +32,11 @@ type Handler interface {
 	FindManyUsers(w http.ResponseWriter, r *http.Request)
 	UpdateUserPassword(w http.ResponseWriter, r *http.Request)
   Login(w http.ResponseWriter, r *http.Request)
+
+  CreateCategory(w http.ResponseWriter, r *http.Request)
+
+  CreateProduct(w http.ResponseWriter, r *http.Request)
+  UpdateProduct(w http.ResponseWriter, r *http.Request)
+  DeleteProduct(w http.ResponseWriter, r *http.Request)
+  FindManyProducts(w http.ResponseWriter, r *http.Request)
 }
