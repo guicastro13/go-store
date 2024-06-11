@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/go-chi/chi"
+  "github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
 	"github.com/guicastro13/go-store/config/env"
 	"github.com/guicastro13/go-store/internal/handler"
@@ -9,6 +10,16 @@ import (
 )
 
 func InitRoutes(router chi.Router, h handler.Handler) {
+
+  router.Use(cors.Handler(cors.Options{
+    AllowedOrigins: []string{"https://*", "http://*"},
+    AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+    AllowedHeaders: []string{"Accept", "Authorization", "Content-type", "X-CSRF-Token"},
+    ExposedHeaders: []string{"Link"},
+    AllowCredentials: false,
+    MaxAge: 300,
+  }))
+
   router.Use(middleware.LoggerData)
 
 
@@ -21,7 +32,6 @@ func InitRoutes(router chi.Router, h handler.Handler) {
 	  r.Patch("/user/password", h.UpdateUserPassword)
 	  r.Delete("/user/me", h.DeleteUser)
 	  r.Get("/user/me", h.GetUserByID)
-
     //category
     r.Post("/category", h.CreateCategory)
     r.Get("/categories", h.FindManyCategories)
